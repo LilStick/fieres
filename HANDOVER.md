@@ -67,7 +67,7 @@ en 1 clic.
 
 Ce projet a évolué en 2 grosses étapes :
 
-### V1 — site vitrine festival (~ 1er sprint)
+### V1 — site vitrine festival (1er sprint)
 
 À la base, le site était une **landing page festival** : une seule home,
 parallax, hero plein écran, sections programme/artistes/talk/infos/partenaires/footer.
@@ -75,8 +75,9 @@ Build à 151 kB First Load JS.
 
 ### V2 — pivot portfolio podcast (sprint actuel)
 
-L'équipe a décidé que le **podcast** est en réalité le cœur de la marque, et
-que le festival est un side-project annuel. On a donc :
+Au cours d'une seconde session, l'orientation a été repensée : le **podcast**
+est en réalité le cœur de la marque, et le festival est un side-project
+annuel. On a donc :
 
 1. **Déplacé** toute l'ancienne home V1 vers `/festival` (inchangée)
 2. **Reconstruit** une nouvelle home portfolio podcast
@@ -85,50 +86,121 @@ que le festival est un side-project annuel. On a donc :
 5. **Ajouté** un bandeau promo festival sticky et une modale d'écoute multi-plateformes
 6. **Ajouté** Lenis pour le smooth scroll premium
 
-### Réponses au brief (récap des décisions)
+### Réponses au brief — pourquoi chaque chose est comme elle est
 
-Toutes ces décisions ont été validées par Noé (RAGE) lors d'une session
-de questions/réponses. Ce qui suit est **acté** :
+Cette section te détaille **toutes les questions** posées pendant le brief
+V2 et **les réponses validées**. Chaque ligne du site a une raison d'être
+documentée ici. Lis-le en entier avant de proposer un changement structurel
+— tu sauras ce qui a déjà été tranché.
 
-| # | Décision |
-|---|---|
-| Brand | Podcast et festival partagent le **même nom** "Fier.e.s" et le **même logo** |
-| Architecture | Podcast central + page festival mise en avant (bandeau + featured) |
-| Pitch home | "Un podcast queer et engagé qui met en lumière les voix qu'on n'entend pas assez" |
-| Public | Toute personne curieuse des récits queer / féministes (pas que la communauté) |
-| Format | Mix table ronde + interview / portrait |
-| Durée | 30-50 min |
-| Fréquence | Hebdo |
-| Thématiques | Identités, drag, intimité, politique (toutes) |
-| Saisons | Numérotées, dernier épisode mis en avant, listing par saison |
-| Hôte | Thomas Chinarro (il/lui), médiateur — **bio actuelle = placeholder**, à remplacer |
-| Photos hôte | **Placeholders pour l'instant** (initiales "TC" sur fond orange) |
-| Épisodes phares | Elips, Paloma, François Chaignaud, Lou Trotignon, Nous Toutes 33, Matthieu Barbin |
-| Plateformes | **Deezer (prio 1)**, Apple (2), Amazon (3), Spotify **discret** (4) |
-| Player | Pas d'embed plateforme : modale "choisir une plateforme" + lien externe |
-| Pages | `/`, `/episodes`, `/residence`, `/festival`, `/a-propos`, `/partenariat` |
-| CTA navbar | Contextuel : "Dernier épisode" partout, "Billets" sur `/festival` |
-| TikTok | Contient des extraits 30s-1min des épisodes |
-| Instagram | Mix : extraits, annonces, portraits, behind-the-scenes |
-| Mur social | Reels + section "suivez-nous" + liens, mais **pas trop flashy** |
-| YouTube | **Pas actif** — ne pas faire d'embed |
-| Festival | Page reprise telle quelle de la V1, édition à venir, billets actifs |
-| Promo festival | Bandeau sticky + section featured sur home podcast |
-| Visuel | **Orange punk-queer V1 partout**, identité cohérente |
-| Logo | Même logo "Fier.e.s" pour podcast + festival |
-| Cover épisodes | Placeholder typographique + **TODO API Deezer/Apple** |
-| Son sur le site | **Aucun** (pas de jingle, pas d'autoplay) |
-| Newsletter | Pas pour l'instant (peut-être plus tard) |
-| Transcriptions | UI prévue (vide) + TODO |
-| Page presse | **Pas de page dédiée** : mention "kit dispo par mail" sur `/partenariat` |
-| Stack tech | "Je te laisse cook" → Next 14 + TS + Tailwind + Framer Motion + Lenis |
-| CMS | **Pas pour l'instant**, hardcodé. TODO Sanity plus tard. |
-| Domaine | **Pas décidé** — placeholder `fier-e-s.fr` |
-| Anti-refs | Pas de cookie banner agressif, pas de design corporate, pas d'autoplay |
-| Référence visuelle | similiqueer.com, Konbini |
-| Deadline | ASAP (pour montrer au festival) |
+#### Cadrage général
 
-**Email contact officiel** : `fier.e.s.podcast@gmail.com`
+| Question posée | Réponse retenue | Implication concrète sur le site |
+|---|---|---|
+| Le podcast devient-il le cœur du site, et le festival une page parmi d'autres ? | **Oui** — podcast central, festival mis en avant car promotion en cours | Route `/` = home podcast. Route `/festival` séparée. Bandeau sticky + section featured pour le festival. |
+| Podcast et festival : même marque ou marques séparées ? | **Même marque "Fier.e.s"** | Logo unique partout, footer unique, palette unique. |
+| Y a-t-il une deadline ? | **ASAP — pour montrer au festival** | Pas de fioritures, on livre du fonctionnel rapidement. |
+
+#### Identité éditoriale du podcast
+
+| Question | Réponse | Conséquence |
+|---|---|---|
+| Pitch en une phrase ? | "Un podcast queer et engagé qui met en lumière les voix qu'on n'entend pas assez." | Utilisé comme `tagline` dans `brand.ts`, affiché en hero home + en metadata SEO. |
+| Public cible ? | **Toute personne curieuse des récits queer / féministes** (pas seulement la communauté) | Le ton du site reste accueillant, pas in-group, lisible pour qui découvre. |
+| Format des épisodes ? | **Mix table ronde + interview / portrait** | Le copy parle de "conversation", "portrait", "table ronde" — pas seulement "interview". |
+| Durée moyenne ? | **30-50 min** | Affiché dans les meta de chaque épisode. |
+| Fréquence ? | **Hebdomadaire** | Mention "Hebdo" sur le hero + dans le footer. |
+| Thématiques récurrentes ? | **Toutes** : identités, drag, intimité, politique | Pas de filtre thématique imposé en V2 ; le copy embrasse l'éventail. |
+| Saisons ? | **Oui, numérotées**. Dernier épisode mis en avant. Voir+ → liste classée par saison. | `seasons` array dans `podcast.ts`, onglets S1-S4 sur `/episodes`, featured "le plus récent" en haut. |
+
+#### Hôte
+
+| Question | Réponse | Conséquence |
+|---|---|---|
+| Combien d'hôtes ? | **1 seul** | Section "Aux manettes" en solo, pas de duo/trio. |
+| Nom + pronoms + rôle ? | **Thomas Chinarro, il/lui, host & médiateur** | Hardcodé dans `host` (`data/podcast.ts`). |
+| Photos HD dispos ? | **Non pour l'instant — placeholders** | Initiales "TC" sur fond orange (cards `host-section.tsx`, `a-propos/page.tsx`). |
+| Bio courte ? | **Invente un placeholder cohérent** | Bio actuelle = générée. **À remplacer dès que Thomas envoie le vrai texte.** |
+
+#### Épisodes & catalogue
+
+| Question | Réponse | Conséquence |
+|---|---|---|
+| Combien d'épisodes existent ? | **30+** | Catalogue rempli (6 réels + 26 placeholders pour atteindre la masse crédible). |
+| Lien RSS / plateformes ? | URLs fournies pour Deezer, Spotify, Amazon Music, Apple Podcasts | Tous les liens en dur dans `platforms` (`data/podcast.ts`). |
+| 3-5 épisodes phares à mettre en avant ? | **6** : Elips, Paloma (gagnante Drag Race France), François Chaignaud (danseur/chorégraphe), Lou Trotignon (humoriste/militant), Nous Toutes 33 (collectif féministe), Matthieu Barbin (écrivain/artiste) | Section `<FeaturedEpisodes>` sur la home. Chaque card a titre + invité·e + rôle + descriptif. |
+| Quel player audio embed ? | **Pas d'embed plateforme**. Modale "choisir une plateforme" en priorité Deezer, avec bouton vers chaque service. | Composant `<ListenModal>` ouvert depuis chaque CTA "Écouter". Aucun iframe Spotify/Deezer en V2. |
+| Page dédiée par épisode ? | **Non, page par saison à la place** | `/episodes` liste toutes les saisons. Pas (encore) de `/episodes/[slug]`. |
+| Filtres / recherche ? | **Filtre par saison uniquement** | Onglets S1/S2/S3/S4 en V2. Pas de search, pas de tags. |
+
+#### Plateformes audio
+
+| Question | Réponse | Conséquence |
+|---|---|---|
+| Quelles plateformes en avant ? | **Deezer prio 1, Apple 2, Amazon 3, Spotify discret 4** | Sort de l'array `platforms` triés par `priority`. Spotify volontairement en bas partout (modale, footer, abonnement). **Ne jamais le mettre en premier**. |
+
+#### Réseaux sociaux
+
+| Question | Réponse | Conséquence |
+|---|---|---|
+| Handles Insta / TikTok / YouTube ? | **Placeholders** pour l'instant | `brand.socials` utilise `@fier.e.s` partout — à remplacer par les vrais comptes podcast quand confirmés. |
+| Contenu TikTok ? | **Extraits 30s-1min des épisodes** | Le copy parle de "clips" / "extraits", pas de "sketches originaux". |
+| Contenu Instagram ? | **Mix** : extraits, annonces, portraits invité·es, behind-the-scenes | Section social wall mêle les types. |
+| Mur Reels / TikTok embed ? | **Les trois (mur + section "suivez-nous" + liens nav/footer) mais pas trop flashy** | `<SocialWall>` : grid 4 TikTok placeholders compacts + colonne 3 Insta placeholders. Sobre, pas saturé. |
+| Chaîne YouTube ? | **Pas active — ne pas faire d'embed** | Aucun composant YouTube en V2. |
+
+#### Festival
+
+| Question | Réponse | Conséquence |
+|---|---|---|
+| /festival reprend la home V1 telle quelle ? | **Oui** | Le contenu de la home V1 a été déplacé tel quel dans `/festival`. Ne pas y toucher sans raison. |
+| Mode édition à venir ou archive ? | **Édition à venir, billets actifs** (comme V1) | Tout est en mode promo : CTA billets partout, "Samedi 13 juin 2025". |
+| Comment promouvoir le festival sur la home podcast ? | **Les deux** : bandeau sticky + section featured | `<FestivalBanner>` en haut de toutes les pages + `<FestivalFeature>` orange sur la home podcast. |
+| La résidence Gaîté Lyrique ? | **Les deux** : section home qui linke vers `/residence` | `<ResidenceHighlight>` sur la home + page `/residence` détaillée (Ebony + Tess Kirby). |
+
+#### Direction visuelle
+
+| Question | Réponse | Conséquence |
+|---|---|---|
+| Charte visuelle ? | **Orange punk-queer V1 partout** | Même palette (orange/ink/bone), même typo (Playfair italic + Space Grotesk) partout. **Ne pas pivoter vers une DA "media sobre"**. |
+| Logo podcast vs festival ? | **Même logo "Fier.e.s"** | Un seul jeu de logos pour les deux. PNG officiels dans `medias/`. |
+| Cover art épisodes ? | **Placeholder pour l'instant** + réfléchir à un système API pour récupérer les miniatures plateformes | Composant `<EpisodeCover>` génère une cover typo. **TODO** documenté pour parser RSS Deezer / Apple feed. |
+| Son sur le site ? | **Aucun** | Pas de jingle, pas d'autoplay, pas d'identité sonore. Le site reste silencieux ; seul l'utilisateur·rice déclenche l'écoute. |
+
+#### CTAs & navigation
+
+| Question | Réponse | Conséquence |
+|---|---|---|
+| Pages à créer ? | `/`, `/episodes`, `/residence`, `/festival`, `/a-propos`, `/partenariat` | 6 routes statiques. Pas plus en V2. |
+| CTA navbar principal ? | **Contextuel** : "Dernier épisode" (modale plateformes) sur la home et toutes les pages podcast ; "Billets" (HelloAsso) sur `/festival/*` | `Navbar` lit `usePathname()` et switch le CTA. **Maintenir cette logique** si tu refactores. |
+
+#### Fonctionnalités
+
+| Question | Réponse | Conséquence |
+|---|---|---|
+| Newsletter ? | **Pas pour l'instant** (peut-être plus tard) | Aucun formulaire newsletter en V2. Quand ce sera décidé : Brevo ou Buttondown probable. |
+| Transcriptions des épisodes ? | **Prévoir l'UI maintenant, vide pour l'instant** | TODO commenté dans `episodes/page.tsx` : "onglet transcription" à brancher. |
+| Page presse ? | **Pas de page dédiée** — mention "kit presse dispo sur demande par mail" sur `/partenariat` | Suivi à la lettre dans `app/partenariat/page.tsx`. |
+
+#### Technique
+
+| Question | Réponse | Conséquence |
+|---|---|---|
+| Stack ? | "Je te laisse cook" → **Next 14 + TS strict + Tailwind + Framer Motion + Lenis** | Stack figée. Lenis a été ajouté pour le smooth scroll premium. |
+| CMS ? | **Pas pour l'instant**, hardcodé dans `src/data/*.ts`. TODO Sanity / Notion / Markdown plus tard. | Toute édition contenu = PR sur le code en V2. À convertir en CMS quand l'ajout d'épisode devient pénible. |
+| Domaine ? | **Pas décidé** | Placeholder `fier-e-s.fr` dans `brand.ts`. À actualiser quand validé. |
+
+#### Anti-références
+
+| Question | Réponse | Conséquence |
+|---|---|---|
+| Trucs à éviter absolument ? | **Pas de cookie banner agressif, pas de design corporate / SaaS, pas d'autoplay** | Trois règles d'or. **Ne propose jamais** un gradient bleu start-up, un wizard de cookies bloquant, ou un Reels qui se lance tout seul. |
+| Références visuelles inspirantes ? | similiqueer.com, Konbini | Pour comprendre le ton et l'énergie souhaités. |
+
+---
+
+**Si tu changes une décision** : retire ou modifie la ligne correspondante
+dans ce tableau, et mets `CLAUDE.md` à jour si la conséquence touche au code.
 
 ---
 
@@ -648,7 +720,7 @@ intégré.
    PNG via Illustrator / Inkscape / un service web. Le résultat sera bien
    plus léger et net.
 
-### À demander à Noé / RAGE
+### À demander à l'équipe Fier.e.s
 
 - **Logo SVG vectoriel** (si dispo) — beaucoup mieux que PNG pour le web
 - **Photos HD de Thomas Chinarro** — actuel placeholder "TC" sur fond orange
@@ -981,7 +1053,7 @@ Niveau visé : **WCAG AA** (les contrastes orange + ink + bone passent).
 
 | Rôle | Nom | Contact |
 |---|---|---|
-| Référent festival / RAGE | Noé Le Roux | `noe.le-roux@ovhcloud.com` |
+| Référent festival / RAGE | Thomas Chinarro | `fier.e.s.podcast@gmail.com` |
 | Host podcast | Thomas Chinarro | `fier.e.s.podcast@gmail.com` |
 | Asso | RAGE | `fier.e.s.podcast@gmail.com` |
 
@@ -1002,8 +1074,6 @@ Niveau visé : **WCAG AA** (les contrastes orange + ink + bone passent).
 
 ## 🎁 Bonus — petites attentions trouvées dans le code
 
-- Le footer dit "Fait avec amour, paillettes et caféine" — c'est volontaire,
-  garde l'ambiance.
 - Les titres des sections "voir+" se terminent souvent par un point orange
   (`.`) — c'est un tic identitaire, garde-le.
 - Le bouton "Dernier épisode" utilise l'animation `animate-pulse-cta` qui
@@ -1011,7 +1081,6 @@ Niveau visé : **WCAG AA** (les contrastes orange + ink + bone passent).
 
 ---
 
-**Bon code, et fais-toi plaisir.** Si tu as une question, fais une issue ou
-ping Noé. Le projet est petit, propre, et facile à étendre. Profite.
+**Bon code, et fais-toi plaisir.** Si tu as une question, fais une issue ou contacte Thomas. Le projet est petit, propre, et facile à étendre. Profite.
 
 — L'équipe & Claude

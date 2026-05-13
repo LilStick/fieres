@@ -6,7 +6,7 @@ export const brand = {
   tagline: "Un podcast queer et engagé qui met en lumière les voix qu'on n'entend pas assez.",
   description:
     "Fier.e.s est un podcast hebdomadaire : table ronde et portraits, à la rencontre des récits queer et féministes que les médias mainstream laissent dans l'angle mort.",
-  // TODO: confirmer le domaine final avec Noé.
+  // TODO: confirmer le domaine final (placeholder pour l'instant).
   domain: "fier-e-s.fr",
   contactEmail: "fier.e.s.podcast@gmail.com",
   organizer: {

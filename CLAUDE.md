@@ -156,6 +156,5 @@ PNG vers `public/brand/`, optimiser, et brancher dans les composants).
 
 ## Contact projet
 
-- Festival / asso RAGE : Noé Le Roux — `noe.le-roux@ovhcloud.com`
-- Podcast / Thomas : `fier.e.s.podcast@gmail.com`
-- Repo : `LilStick/festival-fieres`
+- Podcast / Thomas : `fier.e.s.podcast@gmail.com` `thomaschinarro sur Instagram`
+

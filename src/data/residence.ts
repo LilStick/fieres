@@ -1,7 +1,7 @@
 /**
  * Résidence du podcast à la Gaîté Lyrique.
  * Ebony (à sortir prochainement) + Tess Kirby.
- * TODO: confirmer les dates exactes et le format avec Noé.
+ * TODO: confirmer les dates exactes et le format de la résidence.
  */
 export const residence = {
   venue: "La Gaîté Lyrique",

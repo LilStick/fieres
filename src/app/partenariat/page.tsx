@@ -22,7 +22,7 @@ const audience = [
   { label: "Vues TikTok / mois", value: "+250 000" },
   { label: "Festival 2024", value: "+800 personnes" },
 ];
-// TODO: remplacer ces chiffres par les vrais KPI quand Noé les aura.
+// TODO: remplacer ces chiffres par les vrais KPI.
 
 const offers = [
   {
