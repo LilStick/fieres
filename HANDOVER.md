@@ -732,13 +732,18 @@ intégré.
 
 ## 12. Tous les TODOs
 
-Recherche-les avec :
+👉 **La liste exhaustive et actionnable (avec checkboxes) est dans
+[`TODO.md`](./TODO.md)**. Elle couvre : APIs live (RSS, Insta, TikTok),
+stats live, intégration des vrais assets, features V3, SEO,
+accessibilité, perf, et le bascule festival post-13-juin.
+
+Recherche aussi les TODO inline du code :
 
 ```bash
 grep -rn "TODO" src/
 ```
 
-Voici la liste consolidée, par priorité :
+Voici un résumé rapide ci-dessous, par priorité :
 
 ### 🔴 Priorité haute (avant montrer à un partenaire / lancer en prod)
 

@@ -153,11 +153,15 @@ src/
 | `npm start` | Sert le build production |
 | `npm run lint` | Lint le projet |
 
-## Brief V2 (à remplir par l'équipe)
+## Documents à lire
 
-📋 **[BRIEF_V2.md](./BRIEF_V2.md)** — questionnaire à remplir pour caler une V3
-plus tard : programmation complète, identité, billetterie, accessibilité,
-technique, budget.
+- 📘 **[HANDOVER.md](./HANDOVER.md)** — doc de prise en main complète
+  (archi, design system, conventions, pièges, assets, déploiement).
+- ✅ **[TODO.md](./TODO.md)** — liste actionnable des tâches restantes
+  (APIs live, stats live, intégration assets, features V3, SEO, A11Y).
+- 🤖 **[CLAUDE.md](./CLAUDE.md)** — contexte projet auto-chargé par Claude Code.
+- 📋 **[BRIEF_V2.md](./BRIEF_V2.md)** — questionnaire à remplir pour la
+  prochaine itération.
 
 ## Crédits
 

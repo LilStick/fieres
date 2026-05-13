@@ -147,11 +147,14 @@ PNG vers `public/brand/`, optimiser, et brancher dans les composants).
 
 ## Ressources
 
-- **HANDOVER.md** — doc verbose complète (architecture, todos, design,
+- **HANDOVER.md** — doc verbose complète (architecture, design system,
   workflow Claude, assets, déploiement, gotchas).
+- **TODO.md** — liste actionnable des tâches restantes : APIs live (RSS,
+  Insta, TikTok), stats live, intégration assets, features V3, SEO, A11Y.
+  **C'est là qu'il faut aller en priorité.**
 - **README.md** — README utilisateur·rice (démarrage rapide, sitemap).
 - **BRIEF_V2.md** — gros formulaire pour collecter le brief de la prochaine
-  itération (à remplir par RAGE).
+  itération.
 - **medias/** — assets bruts officiels (logo, affiche, kit PDF).
 
 ## Contact projet
