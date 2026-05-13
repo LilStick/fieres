@@ -107,7 +107,7 @@ src/
 | Variable | Fichier | Contrôle |
 |---|---|---|
 | `brand` | `data/brand.ts` | Nom, tagline, contact, réseaux, nav |
-| `host` | `data/podcast.ts` | Hôte (Thomas Chinaro) |
+| `host` | `data/podcast.ts` | Hôte (Thomas Chinarro) |
 | `platforms` | `data/podcast.ts` | Plateformes d'écoute + priorité d'affichage |
 | `featuredEpisodes` | `data/podcast.ts` | 6 épisodes mis en avant sur la home |
 | `allEpisodes` / `seasons` | `data/podcast.ts` | Catalogue complet + regroupement saison |
@@ -123,7 +123,7 @@ src/
 |---|---|
 | Récupérer les vraies miniatures épisodes via API Deezer/Apple feed | `data/podcast.ts`, `episode-cover.tsx` |
 | Remplacer les épisodes placeholder par le vrai flux RSS | `data/podcast.ts` |
-| Récupérer la vraie bio de Thomas Chinaro | `data/podcast.ts` |
+| Récupérer la vraie bio de Thomas Chinarro | `data/podcast.ts` |
 | Brancher l'oEmbed Instagram/TikTok officiel pour les vrais clips | `social-wall.tsx` |
 | Remplacer les chiffres audience par les vrais KPI | `partenariat/page.tsx` |
 | Confirmer les dates de la résidence Gaîté Lyrique | `residence.ts`, `residence/page.tsx` |
