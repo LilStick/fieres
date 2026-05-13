@@ -192,6 +192,89 @@ Les vrais assets officiels sont à la racine dans `medias/`. Voir
 
 ## 📝 Contenu — remplacer les placeholders rédactionnels
 
+### 🟡 Basculer tous les textes inventés en Lorem ipsum (à faire plus tard)
+
+> **Pourquoi ?** Beaucoup de copy a été générée pour rendre la démo
+> crédible (bios, descriptifs d'épisodes, manifestes, blurbs, etc.).
+> Le souci : à l'œil nu, ces textes inventés se confondent avec du
+> contenu validé par l'équipe. Pour éviter que quelqu'un les prenne
+> pour argent comptant, l'idée est de les **remplacer par du Lorem
+> ipsum** : ça rend immédiatement visible ce qui est un placeholder
+> et ce qui ne l'est pas.
+>
+> Plus tard — quand l'équipe enverra les vrais textes — on remplacera
+> directement le Lorem ipsum.
+
+**Ce qui doit RESTER tel quel** (validé pendant le brief) :
+
+- ✅ `brand.tagline` — "Un podcast queer et engagé qui met en lumière les voix qu'on n'entend pas assez."
+- ✅ `host.name` / `host.pronouns` / `host.role` — Thomas Chinarro, il/lui, host & médiateur
+- ✅ `platforms[]` — URLs Deezer / Apple / Amazon / Spotify (réelles)
+- ✅ `brand.contactEmail` — `fier.e.s.podcast@gmail.com`
+- ✅ Festival 2025 : date, lieu, billetterie HelloAsso
+- ✅ Noms des 6 invité·es phares (Elips, Paloma, François Chaignaud, Lou Trotignon, Nous Toutes 33, Matthieu Barbin) + leurs rôles génériques
+- ✅ Résidence Gaîté Lyrique : noms Ebony et Tess Kirby
+
+**Ce qui doit être remplacé par du Lorem ipsum** (inventaire complet) :
+
+- [ ] **Bio de Thomas** — `src/data/podcast.ts` → `host.bio` (paragraphe complet)
+- [ ] **Citation hôte** — `src/components/podcast/host-section.tsx` → blockquote « On peut pas tout dire, mais on essaie quand même. »
+- [ ] **Descriptions des 6 épisodes phares** — `src/data/podcast.ts` → `featuredEpisodes[].description` (6 paragraphes)
+- [ ] **Titres des 6 épisodes phares** (les sous-titres après le tiret) — `src/data/podcast.ts` → `featuredEpisodes[].title`
+  - ex. "Elips — drag, monstre, et liberté" → "Elips — Lorem ipsum dolor sit amet"
+  - Garder le nom de l'invité·e (validé), seul le sous-titre est inventé
+- [ ] **26 épisodes placeholders** — `src/data/podcast.ts` → `placeholderTitles[]` (titres, guests, guestRoles fictifs)
+  - Idéal : virer entièrement quand le RSS est branché
+  - En attendant : passer tous les titles + guest names + guestRoles en Lorem
+- [ ] **Description générique des épisodes placeholder** — `src/data/podcast.ts` → la string `"Conversation queer sans filtre, à écouter en marchant..."` dans `buildPlaceholders()`
+- [ ] **Méta saisons** (titres et pitches) — `src/data/podcast.ts` → `seasonMeta[]`
+  - "Saison 1 — Les premières voix" + pitch → tous inventés
+  - À remplacer par les vrais noms / pitches des saisons quand connus
+- [ ] **`brand.description`** — `src/data/brand.ts` (paragraphe "Fier.e.s est un podcast hebdomadaire...")
+- [ ] **Résidence Gaîté Lyrique** — `src/data/residence.ts`
+  - `residence.pitch`
+  - `residence.description`
+  - `residence.guests[].blurb` × 2 (Ebony + Tess Kirby)
+- [ ] **Page À propos** — `src/app/a-propos/page.tsx`
+  - Les 4 principes du manifeste (`principles[]`)
+  - Texte sous le titre "Quatre principes, qu'on n'oublie jamais."
+  - Paragraphe "Fier.e.s, c'est aussi une équipe qui prépare..."
+  - Paragraphe sous "Une voix qu'on devrait inviter ?"
+- [ ] **Page Partenariat** — `src/app/partenariat/page.tsx`
+  - Pitch hero "Fier.e.s est un podcast indépendant — mais on aime..."
+  - Les 4 cards d'offres (`offers[]` : Sponsoring épisode, Co-production, Partenaire festival, Kit presse) → bodies à virer en Lorem
+  - Les 4 chiffres d'audience (`audience[]`) → déjà notés comme TODO ci-dessus pour les vrais KPI
+  - Texte "On en parle ?" + paragraphe sous
+- [ ] **Section "Suivre" du social wall** — `src/components/podcast/social-wall.tsx`
+  - "Les meilleurs moments des épisodes sortent en clips..."
+- [ ] **Captions placeholders TikTok / Insta** — `src/components/podcast/social-wall.tsx`
+  - `TIKTOK_PLACEHOLDERS[].caption` × 4
+  - `INSTA_PLACEHOLDERS[].caption` × 3
+- [ ] **Featured episodes — section intro** — `src/components/podcast/featured-episodes.tsx`
+  - "Six conversations à ne pas manquer si tu découvres Fier.e.s..."
+- [ ] **Festival feature — section intro** — `src/components/podcast/festival-feature.tsx`
+  - "Une journée — drag, marché, talk, showcase. Le podcast quitte le micro pour la scène..."
+- [ ] **Résidence highlight — section intro** — `src/components/podcast/residence-highlight.tsx`
+  - Identique au pitch dans `residence.ts`
+- [ ] **Sous-titres / pitches des sections de la home podcast**
+  - `podcast/hero.tsx` — pitch sous le titre
+  - `podcast/host-section.tsx` — paragraphe bio
+  - Tout `subtitle` / paragraphe de section qui n'est pas un fait validé
+
+**Conseil de mise en œuvre** :
+
+- Préférer un Lorem ipsum **typé** au lieu du classique latin : `loremipsum.io/generator` permet de générer du Lorem en français.
+- Garder la **longueur** approximative pour ne pas casser la mise en page.
+- Marquer les Lorem dans le code avec un commentaire `// PLACEHOLDER — à remplacer par le vrai texte` pour rendre l'inventaire trivial à retrouver via `grep`.
+
+```bash
+grep -rn "PLACEHOLDER" src/    # tous les Lorem identifiés
+```
+
+---
+
+### Autres contenus à remplacer (vrais textes attendus)
+
 - [ ] **Vraie bio de Thomas Chinarro**
   - Fichier : `src/data/podcast.ts` → constante `host.bio`
   - Actuel : généré, à remplacer
