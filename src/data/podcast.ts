@@ -1,3 +1,10 @@
+/**
+ * Flux RSS officiel (Anchor / Spotify for Podcasters) — source canonique
+ * pour récupérer titres, descriptions, durées, covers et dates d'épisodes.
+ * Voir TODO.md → "Récupération automatique des épisodes (RSS / API)".
+ */
+export const RSS_FEED_URL = "https://anchor.fm/s/f68999a4/podcast/rss";
+
 export type Platform = {
   id: "deezer" | "apple" | "amazon" | "spotify";
   label: string;
@@ -158,8 +165,9 @@ export const featuredEpisodes: Episode[] = [
 
 /**
  * Épisodes placeholder pour étoffer le listing — invité·es fictif·ves
- * mais crédibles. À remplacer par les vraies données dès qu'on a accès au RSS.
- * TODO: parser le flux RSS Deezer/Apple et générer cette liste auto.
+ * mais crédibles. À remplacer par les vraies données via le flux RSS Anchor
+ * (cf. `RSS_FEED_URL` plus haut).
+ * TODO: parser RSS_FEED_URL et générer cette liste auto.
  */
 const placeholderTitles: Array<{
   title: string;

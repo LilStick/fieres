@@ -3,7 +3,8 @@ import { Star } from "@/components/shared/star";
 
 /**
  * Cover typographique pour les épisodes — placeholder en attendant les vraies miniatures.
- * TODO: parser le flux RSS Deezer/Apple Podcasts pour récupérer les vraies covers.
+ * TODO: parser le flux RSS Anchor (cf. RSS_FEED_URL dans src/data/podcast.ts)
+ *       pour récupérer les `<itunes:image>` par épisode.
  */
 export function EpisodeCover({
   guest,

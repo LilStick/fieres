@@ -22,105 +22,155 @@ Objectif : **brancher les APIs réelles** pour que le site reflète
 automatiquement les vrais épisodes, les vraies miniatures, les vrais
 chiffres. Plus de placeholders, plus de chiffres inventés.
 
-### 🔴 Récupération automatique des épisodes (RSS / API)
+### 🔴 Récupération automatique des épisodes via le RSS Anchor
 
-- [ ] **Parser le flux RSS** du podcast pour générer `allEpisodes` automatiquement
-  - Deezer expose un RSS standard : `https://www.deezer.com/show/<id>/rss` (à valider)
-  - Sinon, Apple Podcasts expose le RSS via Look-up API : `https://itunes.apple.com/lookup?id=1754599625&entity=podcast`
-  - Ou le RSS d'origine (Acast, Ausha, Anchor, Hostinger, etc. — vérifier sur quel hébergeur Thomas publie)
-  - Implémentation suggérée : **route handler** `app/api/episodes/route.ts` qui :
-    1. Fetch le flux RSS
-    2. Parse XML (lib : `fast-xml-parser` ou `rss-parser`)
-    3. Normalise au format `Episode` défini dans `src/data/podcast.ts`
-    4. Revalide toutes les heures (ISR : `export const revalidate = 3600`)
-  - Effet : remplace les 26 `placeholderEpisodes` par les vrais épisodes
-  - Garder une "couche d'enrichissement" locale pour ajouter manuellement des `featured: true`, tags, etc.
+**Source canonique confirmée** :
 
-- [ ] **Vraies miniatures épisodes** (covers)
-  - Le RSS contient toujours `<itunes:image>` par épisode → utiliser ça en priorité
-  - Fallback sur la cover du show si miniature épisode absente
-  - Stocker l'URL dans `Episode.coverUrl` (déjà prévu dans le type)
-  - Bascule `<EpisodeCover>` : si `coverUrl` existe, afficher `<Image>` ; sinon, afficher le placeholder typo actuel
-
-- [ ] **Vraies descriptions épisodes**
-  - Le RSS contient `<description>` ou `<itunes:summary>` → propre, à utiliser
-  - Strip les balises HTML (`description.replace(/<[^>]+>/g, '')`)
-
-- [ ] **Vraies durées** depuis `<itunes:duration>` (format `mm:ss` ou `hh:mm:ss`)
-
-- [ ] **Vraies dates de publication** depuis `<pubDate>` (format RFC 822)
-
-### 🔴 Stats live des plateformes
-
-Tous les chiffres dans `app/partenariat/page.tsx` (`audience`) sont
-**inventés** :
-```ts
-const audience = [
-  { label: "Auditeur·ices / mois", value: "+8 000" },
-  { label: "Followers Instagram", value: "+12 000" },
-  { label: "Vues TikTok / mois", value: "+250 000" },
-  { label: "Festival 2024", value: "+800 personnes" },
-];
+```
+https://anchor.fm/s/f68999a4/podcast/rss
 ```
 
-À remplacer par des **vraies données**, idéalement live.
+Hébergeur : **Anchor / Spotify for Podcasters**. Référence aussi dispo dans
+`src/data/podcast.ts` → constante `RSS_FEED_URL`, et dans
+`medias/fluxrss.md`.
 
-- [ ] **Followers Instagram**
-  - **Instagram Graph API** (Business / Creator account requis) :
-    `GET /{ig-user-id}?fields=followers_count`
-    Doc : https://developers.facebook.com/docs/instagram-api/reference/ig-user
-  - Nécessite un App Facebook + token long-lived (à stocker en env var `INSTAGRAM_TOKEN`)
-  - Caching côté Next : revalidate toutes les 6h max
+Le flux est public, CORS ouvert (`access-control-allow-origin: *`),
+mis à jour à chaque publication. **Tout est dedans** : titres, descriptions
+HTML, durées, dates, covers par épisode, saison/épisode numéro.
 
-- [ ] **Vues / followers TikTok**
-  - **TikTok Display API** : `GET /v2/research/user/info/` (champ `follower_count`)
-    Doc : https://developers.tiktok.com/doc/research-api-specs-query-user-info
-  - Auth OAuth requise, plus chiantos qu'Insta
-  - Alternative lo-fi : scraping via **TikTok-Api** unofficial (fragile, à éviter en prod)
+**Format observé** des titres : `FIER.E.S - <INVITÉ·E> / <PERSONA SCÈNE>`
+(ex. `FIER.E.S - MATTHIEU BARBIN / SARA FOREVER`). Le `<description>` HTML
+contient régulièrement les handles Insta des invité·es, le·la photographe,
+et le lieu d'enregistrement.
 
-- [ ] **Auditeur·ices / mois (écoutes podcast)**
-  - **Apple Podcasts Connect API** (analytics auteur) : si Thomas a accès au compte
-  - **Spotify for Podcasters** : export CSV manuel, pas d'API publique propre
-  - **Deezer Creator** : pas d'API analytics publique
-  - **Solution réaliste V2.5** : agréger manuellement chaque mois et stocker dans `data/stats.ts` (genre snapshot mensuel)
-  - **Solution V3** : un cron mensuel qui envoie un mail "go updater les chiffres" → c'est OK pour un podcast indépendant
+#### À faire
 
-- [ ] **Audience festival** (chiffres édition n-1)
-  - Pas d'API — donnée stockée manuellement après chaque édition dans `data/festival.ts`
+- [ ] **Parser le flux RSS** pour générer `allEpisodes` automatiquement
+  - Lib recommandée : **`rss-parser`** (`npm i rss-parser`) qui gère les
+    extensions `itunes:*` proprement, ou **`fast-xml-parser`** si tu veux
+    zéro dépendance lourde
+  - Implémentation suggérée : **route handler** `app/api/episodes/route.ts`
+    qui :
+    1. Fetch `RSS_FEED_URL`
+    2. Parse XML → array d'items
+    3. Normalise au format `Episode` défini dans `src/data/podcast.ts`
+    4. Revalide toutes les heures (ISR : `export const revalidate = 3600`)
+  - Alternative plus simple V2.5 : fetch direct dans un Server Component
+    de `/episodes` (pas de route handler intermédiaire)
+  - Effet : remplace les 26 `placeholderEpisodes` par les vrais épisodes
+  - Garder une "couche d'enrichissement" locale pour ajouter manuellement
+    des `featured: true`, tags, et la `guestRole` (que le RSS n'a pas)
 
-- [ ] **Implémentation suggérée**
-  - Créer `src/lib/stats/` avec un module par plateforme (`instagram.ts`, `tiktok.ts`...)
-  - Chaque module exporte `async function getXxxStats()` qui fetch + cache
-  - Route handler `app/api/stats/route.ts` qui agrège
-  - Sur la page `/partenariat`, fetch ces stats côté serveur (Server Component → `await getStats()`)
-  - `export const revalidate = 21600` (6h)
+- [ ] **Vraies miniatures épisodes** (covers)
+  - Chaque `<item>` du RSS contient `<itunes:image href="...">` (CDN
+    CloudFront Anchor)
+  - Fallback : `<itunes:image>` du `<channel>` (cover du show)
+  - Stocker dans `Episode.coverUrl` (champ déjà prévu)
+  - Bascule `<EpisodeCover>` : si `coverUrl` existe → `<Image>` ; sinon →
+    placeholder typo actuel
+  - ⚠️ Penser à ajouter le domaine `d3t3ozftmdmh3i.cloudfront.net` dans
+    `next.config.mjs > images.remotePatterns` pour autoriser `next/image`
 
-### 🟡 Social wall (Instagram + TikTok embeds)
+- [ ] **Vraies descriptions épisodes** depuis `<description>` ou
+  `<itunes:summary>` (HTML — strip les balises avec
+  `.replace(/<[^>]+>/g, '')` ou `DOMParser`)
 
-Aujourd'hui `<SocialWall>` affiche des **placeholders fictifs** :
+- [ ] **Vraies durées** depuis `<itunes:duration>` (format `hh:mm:ss`,
+  ex. `00:37:06` → afficher `37 min`)
+
+- [ ] **Vraies dates** depuis `<pubDate>` (format RFC 822)
+
+- [ ] **Saison + numéro épisode** depuis `<itunes:season>` et
+  `<itunes:episode>` (les featured actuels sont en saison 3, mais la saison
+  4 existe déjà — vrai catalogue à 28+ épisodes)
+
+- [ ] **Extraire le nom de l'invité·e** du titre via regex
+  `/^FIER\.E\.S - (.+?)(?: \/ .+)?$/i`
+  - L'invité·e principal·e est entre `-` et `/` (ou tout après `-` s'il
+    n'y a pas de `/`)
+
+- [ ] **Lien audio direct** disponible dans `<enclosure url>` — utile pour
+  un lecteur audio HTML5 inline plus tard (toujours pas prio en V2)
+
+### 🟡 Social wall (Instagram + TikTok)
+
+Un peu plus urgent que les stats live : le mur de Reels / TikToks doit
+afficher du **vrai contenu** rapidement, pour que le site ne soit pas
+saturé de placeholders visuels. Aujourd'hui `<SocialWall>` affiche des
+captions fictifs :
+
 ```ts
+// src/components/podcast/social-wall.tsx
 const TIKTOK_PLACEHOLDERS = [...];
 const INSTA_PLACEHOLDERS = [...];
 ```
 
-Objectif : afficher les **vrais derniers Reels / TikToks**.
+**Plan pragmatique** (du plus simple au plus carré) :
 
-- [ ] **Instagram oEmbed**
-  - **Instagram Basic Display API** (deprecated décembre 2024) → utiliser Instagram Graph API à la place
-  - Endpoint media : `GET /{ig-user-id}/media?fields=id,caption,media_type,media_url,permalink,thumbnail_url`
-  - Filtrer `media_type === "VIDEO"` ou `"REELS"`
-  - Cacher 1h
-  - Doc : https://developers.facebook.com/docs/instagram-api/guides/posting/
+- [ ] **V1 lo-fi — Liste manuelle des derniers URLs**
+  - Créer `src/data/social.ts` avec un array de 4-6 URLs TikTok et 3-4 URLs
+    Instagram à la main (le top en avant, à actualiser tous les ~15 jours)
+  - Effet : on supprime les captions fictifs, on a du vrai contenu
+    cliquable avec thumbnail
+  - Effort : 30 min de code + 5 min/mois de maintenance
 
-- [ ] **TikTok oEmbed**
-  - Endpoint public sans auth : `GET https://www.tiktok.com/oembed?url=<post-url>`
-  - Retourne HTML embed officiel + thumbnail
-  - Workflow possible : récupérer la liste des derniers posts via Display API, puis pour chaque URL passer dans oEmbed pour avoir le HTML embed
+- [ ] **V2 — TikTok oEmbed (sans auth)**
+  - Endpoint **public sans token** : `GET https://www.tiktok.com/oembed?url=<post-url>`
+  - Retourne `{ html, thumbnail_url, title, author_name, ... }`
+  - Workflow : pour chaque URL dans `social.ts`, appeler l'oEmbed côté
+    serveur, cacher le résultat
   - Doc : https://developers.tiktok.com/doc/embed-videos
+  - Effort : 1-2h ; gros gain visuel
 
-- [ ] **Fallback gracieux**
-  - Si l'API tombe ou si pas de token, garder les placeholders typographiques actuels
-  - Pas de `loading...` vide qui casse la page
+- [ ] **V2 — Instagram oEmbed (sans auth, sans Facebook App)**
+  - Endpoint **public** : `GET https://api.instagram.com/oembed/?url=<post-url>`
+    (⚠️ déprécié officiellement mais marche encore en novembre 2025)
+  - Alternative officielle : Facebook oEmbed
+    `GET https://graph.facebook.com/v18.0/instagram_oembed?url=<post-url>&access_token=<token>`
+  - Effort : 1h (sans token) ou 2h (avec token Facebook App)
+
+- [ ] **V3 — Récupération auto via Instagram Graph API + TikTok Display API**
+  - Pour récupérer **automatiquement** la liste des derniers posts (plus de
+    maintenance manuelle)
+  - Instagram : Business/Creator account requis, app Facebook, token long-lived
+  - TikTok : Display API avec OAuth
+  - Effort : 1 jour + setup Facebook App
+  - **Pas prio** — la solution manuelle (V1+V2) couvre largement le besoin
+    en attendant
+
+- [ ] **Fallback gracieux** dans tous les cas
+  - Si l'API tombe ou si pas de token → garder les placeholders typo actuels
+  - Pas de `loading…` vide qui casse la page
+
+### 🟢 Stats live des plateformes (pas prio)
+
+> **Pourquoi rétrogradé en 🟢 ?**
+> Les chiffres d'audience sur `/partenariat` sont aujourd'hui inventés.
+> Brancher des APIs analytics (Instagram Graph, TikTok Display, Apple
+> Podcasts Connect, Spotify for Podcasters) demande beaucoup de plumbing
+> (app Facebook, OAuth, tokens long-lived, refresh, rate limits) pour un
+> écran qui n'est pas le cœur du site.
+>
+> **Décision V2** : on se concentre d'abord sur finir le site (assets,
+> social wall, RSS épisodes). Les stats live, on s'en occupe plus tard,
+> quand l'équipe aura validé les vrais chiffres à afficher de toute façon.
+
+**Solution simple en attendant** : éditer manuellement le tableau `audience`
+dans `src/app/partenariat/page.tsx` avec les vrais chiffres une fois par
+trimestre. C'est tout.
+
+Si un jour ça devient nécessaire de l'automatiser :
+
+- [ ] **Followers Instagram** via Graph API (`GET /{ig-user-id}?fields=followers_count`)
+- [ ] **Followers/vues TikTok** via Display API
+- [ ] **Auditeur·ices podcast** — pas d'API publique propre (Apple/Spotify/Deezer).
+  Recommandation : snapshot mensuel manuel dans `data/stats.ts`
+- [ ] **Audience festival** — donnée manuelle stockée dans `data/festival.ts`
+  après chaque édition
+- [ ] **Implémentation** quand le moment viendra :
+  - `src/lib/stats/*.ts` un module par plateforme
+  - Route handler `app/api/stats/route.ts` qui agrège
+  - Fetch côté Server Component avec `revalidate: 21600` (6h)
 
 ---
 
