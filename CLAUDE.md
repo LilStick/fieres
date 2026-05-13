@@ -82,7 +82,30 @@ src/
 - **CTA navbar contextuel** : "Dernier épisode" (modale plateformes) sur la
   plupart des pages, "Billets" (HelloAsso) sur `/festival/*`.
 
-## Ce qui est en placeholder (à remplacer en priorité)
+## Stratégie 2 phases (validée)
+
+**Phase 1 — ship ASAP** (Arthur) :
+1. Intégrer le logo officiel (PNG dans `medias/` → `public/brand/`)
+2. Brancher le RSS Anchor (URL : `https://anchor.fm/s/f68999a4/podcast/rss`)
+3. Optimiser les images (`next/image` + webp affiche)
+4. SEO basique (sitemap, robots, favicon, OG image)
+5. Lorem-ifier tous les textes inventés
+6. Lien envoyé à Thomas → il remplace les Lorem par ses vrais textes
+7. Ship 🚀
+
+**Phase 2 — plus tard, post-launch** :
+Stats live, social wall oEmbed, page `/episodes/[slug]`, audits A11Y,
+Sentry, analytics, CMS, newsletter, multi-langue, PWA, transcriptions,
+formulaires de candidature.
+
+**Décisions à avoir avec Thomas** (bloquantes fin de phase 1) :
+- État de la page `/festival` (archive 2025 / teaser 2026 / nouvelle édition ?)
+- Vraie bio + photos Thomas
+- Vrais chiffres audience pour `/partenariat`
+- Domaine final
+- Workflow de validation (preview Vercel ? captures ? PRs ?)
+
+## Ce qui est en placeholder (à remplacer en phase 1)
 
 - **Logo** : actuellement typo Playfair italique + SVG étoile. Vrais logos
   PNG dans `medias/FieresLOGOstars_Sansfond.png` (blanc) et
@@ -90,11 +113,15 @@ src/
 - **Photo Thomas Chinarro** : placeholder "TC" sur fond orange dans
   `podcast/host-section.tsx` et `a-propos/page.tsx`.
 - **26 épisodes placeholder** dans `data/podcast.ts` (`placeholderTitles`)
-  → à remplacer par les vrais épisodes (idéalement via parsing RSS).
-- **Miniatures épisodes** : cover typographique générée — TODO API
-  Deezer/Apple feed.
-- **Chiffres audience** sur `/partenariat` : TODO réels KPI.
-- **TikTok / Instagram social wall** : placeholders. TODO oEmbed officiel.
+  → à remplacer par les vrais épisodes via le RSS Anchor.
+- **Miniatures épisodes** : cover typographique générée — disponibles dans
+  le RSS Anchor (`<itunes:image>` par épisode).
+- **Tous les textes inventés** : à passer en Lorem ipsum avant review Thomas.
+
+## Ce qui est en placeholder MAIS reste en phase 2
+
+- **Chiffres audience** sur `/partenariat` (édition manuelle au trimestre suffit).
+- **TikTok / Instagram social wall** : laissé tel quel pour le launch.
 
 ## Pièges connus
 
@@ -153,9 +180,7 @@ PNG vers `public/brand/`, optimiser, et brancher dans les composants).
   Insta, TikTok), stats live, intégration assets, features V3, SEO, A11Y.
   **C'est là qu'il faut aller en priorité.**
 - **README.md** — README utilisateur·rice (démarrage rapide, sitemap).
-- **BRIEF_V2.md** — gros formulaire pour collecter le brief de la prochaine
-  itération.
-- **medias/** — assets bruts officiels (logo, affiche, kit PDF).
+- **medias/** — assets bruts officiels (logo, affiche, kit PDF, RSS URL).
 
 ## Contact projet
 

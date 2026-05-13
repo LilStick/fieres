@@ -48,7 +48,9 @@ animé par **Thomas Chinarro**. Le podcast est hebdomadaire, mixe table ronde
 et portrait, dure 30-50 min, et a déjà 30+ épisodes répartis sur 4 saisons.
 
 L'asso organise aussi chaque année un **festival** (drag shows, marché, talk,
-showcase) — édition 2025 le **samedi 13 juin à Césure (Paris 5e)**.
+showcase) — l'édition 2025 a eu lieu le 13 juin à Césure (Paris 5e). Le
+statut de la page `/festival` (archive ? teaser 2026 ?) est **à décider avec
+Thomas** (cf. section TODOs).
 
 Le site qu'on a construit est un **portfolio podcast** avec une **page
 festival** dédiée. Le podcast est central, le festival est mis en avant via
@@ -60,6 +62,24 @@ Motion + Lenis (smooth scroll).
 **Stack volontairement légère** : pas de CMS, pas de DB, pas d'API. Tout est
 hardcodé dans `src/data/*`. Le site est 100 % statique, déployable sur Vercel
 en 1 clic.
+
+### 🚦 Stratégie 2 phases (la chose la plus importante à comprendre)
+
+L'objectif **n°1** est de **ship un site live et validé par Thomas le plus
+vite possible**. On fait le minimum nécessaire pour qu'il puisse partager
+le lien, et on garde les chantiers lourds pour plus tard.
+
+**Phase 1 (toi, Arthur)** : intégrer le logo officiel, brancher le RSS
+Anchor, optimiser les images, SEO basique, Lorem-ifier les textes inventés,
+puis envoyer le lien à Thomas pour qu'il remplisse ses vrais textes.
+
+**Phase 2 (post-launch)** : stats live (Instagram Graph API, TikTok Display
+API), social wall oEmbed, page `/episodes/[slug]`, audits A11Y poussés,
+Sentry, analytics, CMS Sanity, newsletter, multi-langue, PWA, transcriptions,
+formulaires de candidature. On verra ensemble quand on aura le site en ligne.
+
+→ **Toute la checklist Phase 1 ordonnée** est dans
+[`TODO.md`](./TODO.md) (en haut du fichier).
 
 ---
 
@@ -154,7 +174,7 @@ documentée ici. Lis-le en entier avant de proposer un changement structurel
 | Question | Réponse | Conséquence |
 |---|---|---|
 | /festival reprend la home V1 telle quelle ? | **Oui** | Le contenu de la home V1 a été déplacé tel quel dans `/festival`. Ne pas y toucher sans raison. |
-| Mode édition à venir ou archive ? | **Édition à venir, billets actifs** (comme V1) | Tout est en mode promo : CTA billets partout, "Samedi 13 juin 2025". |
+| Mode édition à venir ou archive ? | **Édition à venir, billets actifs** (décidé pendant le brief V2, avant que la date du 13 juin 2025 ne soit passée) ⚠️ **à retrancher avec Thomas avant le launch** (cf. TODO.md → "Festival") | Code reste en mode promo aujourd'hui, mais incohérent calendaire — à corriger en phase 1. |
 | Comment promouvoir le festival sur la home podcast ? | **Les deux** : bandeau sticky + section featured | `<FestivalBanner>` en haut de toutes les pages + `<FestivalFeature>` orange sur la home podcast. |
 | La résidence Gaîté Lyrique ? | **Les deux** : section home qui linke vers `/residence` | `<ResidenceHighlight>` sur la home + page `/residence` détaillée (Ebony + Tess Kirby). |
 
@@ -242,8 +262,8 @@ fait râler souvent — c'est volontaire.
 
 ### Variables d'environnement
 
-**Aucune pour l'instant.** Quand on ajoutera l'API Deezer/Apple ou un CMS,
-on créera un `.env.local` documenté ici.
+**Aucune pour l'instant.** Quand on branchera le RSS Anchor (cf. TODO.md
+Phase 1) ou un CMS plus tard, on créera un `.env.local` documenté ici.
 
 ---
 
@@ -309,7 +329,6 @@ fieres/
 ├── HANDOVER.md          ← ce fichier
 ├── CLAUDE.md            ← contexte projet pour Claude Code (auto-chargé)
 ├── README.md            ← README orienté utilisateur·rice final·e
-├── BRIEF_V2.md          ← gros formulaire à remplir pour la V3 (futur)
 ├── medias/              ← assets bruts fournis par RAGE (logo + affiche + kit PDF)
 │   ├── Affiche.png
 │   ├── FieresLOGOstars_Sansfond.png      (logo blanc, fond transparent)

@@ -1,10 +1,14 @@
 # 📋 TODO — Fier.e.s
 
-Liste actionnable de tout ce qui reste à faire sur le site.
-Pour chaque item :
-- 🔴 = bloquant / haute priorité (à faire avant un partage public sérieux)
-- 🟡 = qualité (déblocage de fonctionnalités vraies, fin des placeholders)
-- 🟢 = polish / V3 / nice-to-have
+## 🎯 Stratégie : 2 phases distinctes
+
+**Phase 1 = ship ASAP.** Objectif unique : sortir un site **live, validé,
+partageable** au plus vite. On fait le minimum nécessaire pour que Thomas
+puisse montrer le site, valider le contenu, et le partager. Rien de plus.
+
+**Phase 2 = améliorations lourdes, post-launch.** Stats live, analytics,
+audits, CMS, multi-langue, etc. On y reviendra plus tard, quand le site
+sera en ligne et que les vraies données seront stables.
 
 > **Convention** : coche la case quand c'est fait (`- [x]`). Si tu démarres
 > sans finir, écris ton nom à côté → `- [ ] (Arthur, WIP)` pour qu'on
@@ -12,7 +16,65 @@ Pour chaque item :
 
 ---
 
-## 🚦 La grosse priorité — passer du hardcodé au live
+## ✅ Phase 1 — Checklist launch (ordre conseillé)
+
+À faire par Arthur **avant** de partager le lien à Thomas pour review du
+contenu :
+
+- [ ] **1. Intégrer le logo officiel** (cf. section [Assets](#-assets--passer-aux-vrais-visuels))
+  - Copier les PNG `medias/` vers `public/brand/`
+  - Remplacer placeholder typo dans : navbar, footer, hero podcast, hero festival
+- [ ] **2. Brancher le flux RSS Anchor** (cf. section [RSS](#-r%C3%A9cup%C3%A9ration-automatique-des-%C3%A9pisodes-via-le-rss-anchor))
+  - Route handler ou Server Component qui fetch `RSS_FEED_URL`
+  - Remplace les 26 `placeholderEpisodes` par les vrais ~28 épisodes
+  - Vraies covers, vraies durées, vraies dates
+- [ ] **3. Optimiser les images** (cf. section [Image opti](#%EF%B8%8F-optimisation-images-phase-1))
+  - Convertir l'affiche festival en `.webp` (4 Mo → < 500 kB)
+  - Utiliser `next/image` partout (logo, affiche, covers RSS)
+  - Ajouter `d3t3ozftmdmh3i.cloudfront.net` dans `next.config.mjs > images.remotePatterns`
+- [ ] **4. SEO basique** (cf. section [SEO basique](#-seo-basique-phase-1))
+  - `app/sitemap.ts`, `app/robots.ts`
+  - Favicon + apple-touch-icon depuis le logo officiel
+  - OG image statique 1200×630 + meta og dans `layout.tsx`
+- [ ] **5. Passer tous les textes inventés en Lorem ipsum** (cf. section [Lorem](#-basculer-tous-les-textes-invent%C3%A9s-en-lorem-ipsum-phase-1))
+  - But : Thomas voit immédiatement où il doit écrire le vrai texte
+  - **Important** : ne PAS Lorem-ifier les contenus validés (cf. liste blanche)
+- [ ] **6. Envoyer le lien à Thomas pour review**
+  - Vercel preview ou autre URL temporaire (à discuter)
+  - Thomas remplace chaque Lorem par son texte
+  - Itérations courtes par PR / messages
+
+Quand tout est coché → **le site est ready à ship en V2**. La phase 2 peut
+attendre.
+
+---
+
+## ❓ Décisions à prendre avec Thomas (bloquantes pour la fin de phase 1)
+
+- [ ] **État de la page `/festival`** — édition 2025 passée. Bascule en
+  archive ? Teaser 2026 ? Sera décidé en discussion avec Thomas.
+  - Fichier impact : `src/app/festival/page.tsx`,
+    `src/components/shared/festival-banner.tsx`,
+    `src/data/festival.ts`
+- [ ] **Vraie bio Thomas + photos HD** — pour remplacer le Lorem une fois
+  que Thomas les a fournies.
+- [ ] **Vrais chiffres audience** pour `/partenariat` — quand Thomas aura
+  les bons KPI.
+- [ ] **Nom de domaine final** + hébergeur (probablement Vercel) — à
+  trancher avant le launch public.
+- [ ] **Workflow de validation** — Thomas review par captures d'écran ?
+  Par Vercel preview ? Par direct GitHub PR ?
+
+---
+
+## 🚦 Phase 1 — Détails techniques
+
+### Légende priorité (à l'intérieur de la phase 1)
+
+- 🔴 = absolument requis pour ship
+- 🟡 = important mais peut être bâclé en attendant
+
+### Vue d'ensemble — du hardcodé au live
 
 Tout le contenu du site est aujourd'hui **figé dans `src/data/*.ts`** :
 épisodes, plateformes, social wall, chiffres audience. C'est volontaire
@@ -92,11 +154,61 @@ et le lieu d'enregistrement.
 - [ ] **Lien audio direct** disponible dans `<enclosure url>` — utile pour
   un lecteur audio HTML5 inline plus tard (toujours pas prio en V2)
 
-### 🟡 Social wall (Instagram + TikTok)
+### 🔴 SEO basique (phase 1)
 
-Un peu plus urgent que les stats live : le mur de Reels / TikToks doit
-afficher du **vrai contenu** rapidement, pour que le site ne soit pas
-saturé de placeholders visuels. Aujourd'hui `<SocialWall>` affiche des
+À faire avant le launch public — sans ça le site n'est pas indexable et
+le partage social est moche.
+
+- [ ] **`app/sitemap.ts`** — sitemap.xml généré auto par Next 14
+- [ ] **`app/robots.ts`** — robots.txt
+- [ ] **Favicon + apple-touch-icon** depuis le logo officiel
+  - Files attendus : `app/favicon.ico`, `app/icon.png`, `app/apple-icon.png`
+- [ ] **`<title>` + `<meta description>`** dédié par page
+  - Partiellement fait (chaque `page.tsx` a un `export const metadata`)
+  - Vérifier que CHAQUE page a un title spécifique
+- [ ] **OG image statique** 1200×630 pour le partage social
+  - Fichier : `public/og.png`
+  - Référencé dans `app/layout.tsx` → `metadata.openGraph.images`
+  - Sur l'image : logo officiel + tagline du podcast
+
+### ⚡️ Optimisation images (phase 1)
+
+L'affiche festival fait 4 Mo en PNG. Sans optimisation, le site rame sur
+mobile.
+
+- [ ] **Convertir l'affiche en `.webp`** (cible : < 500 kB sans perte visible)
+  - Outils : `cwebp` CLI, ou `squoosh.app`
+  - Garder la version PNG pour fallback OG image / social share
+- [ ] **`next/image` partout** (pas de `<img>` raw)
+  - Logo navbar : `priority` (au-dessus du fold)
+  - Affiche : `placeholder="blur"` + `sizes`
+  - Covers RSS : `sizes` responsive
+- [ ] **Autoriser le CDN Anchor dans `next.config.mjs`**
+  ```js
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 'd3t3ozftmdmh3i.cloudfront.net' },
+    ],
+  },
+  ```
+
+### 🟢 Social wall (Instagram + TikTok) — **phase 2**
+
+> 📌 **Note de lecture** : les sections "Social wall" et "Stats live"
+> ci-dessous sont documentées **avec le RSS** (parce qu'elles concernent
+> aussi des APIs externes), mais elles font partie de la **Phase 2**.
+> Arthur n'y touche pas en phase 1.
+>
+> Pour le reste de la phase 2 (Features V3, SEO polish, A11Y, perf,
+> monitoring, tech debt), voir le bloc **# 🟢 Phase 2** plus bas.
+
+---
+
+> ⚠️ **Décision validée** : on laisse `<SocialWall>` tel quel
+> (avec ses captions fictifs) pour le launch. Arthur ne touche pas en
+> phase 1.
+
+Aujourd'hui `<SocialWall>` affiche des
 captions fictifs :
 
 ```ts
@@ -242,18 +354,25 @@ Les vrais assets officiels sont à la racine dans `medias/`. Voir
 
 ## 📝 Contenu — remplacer les placeholders rédactionnels
 
-### 🟡 Basculer tous les textes inventés en Lorem ipsum (à faire plus tard)
+### 🔴 Basculer tous les textes inventés en Lorem ipsum (phase 1, dernière étape avant review Thomas)
 
+> **Quand ?** Une fois que **logo + RSS + assets** sont en place (étapes
+> 1-3 de la checklist Phase 1), Arthur passe sur cette section AVANT
+> d'envoyer le lien à Thomas.
+>
 > **Pourquoi ?** Beaucoup de copy a été générée pour rendre la démo
 > crédible (bios, descriptifs d'épisodes, manifestes, blurbs, etc.).
 > Le souci : à l'œil nu, ces textes inventés se confondent avec du
-> contenu validé par l'équipe. Pour éviter que quelqu'un les prenne
-> pour argent comptant, l'idée est de les **remplacer par du Lorem
-> ipsum** : ça rend immédiatement visible ce qui est un placeholder
-> et ce qui ne l'est pas.
+> contenu validé. Le **Lorem ipsum sert de signal visuel à Thomas** :
+> quand il regarde le site, il voit immédiatement "ici je dois écrire le
+> vrai texte". Plus de risque qu'il croie qu'un texte inventé est le vrai.
 >
-> Plus tard — quand l'équipe enverra les vrais textes — on remplacera
-> directement le Lorem ipsum.
+> Workflow validé :
+> 1. Arthur finalise structure tech (logo + RSS + assets)
+> 2. Arthur Lorem-ifie tous les textes inventés
+> 3. Lien envoyé à Thomas pour review
+> 4. Thomas remplace chaque Lorem par son vrai texte
+> 5. Ship 🚀
 
 **Ce qui doit RESTER tel quel** (validé pendant le brief) :
 
@@ -360,6 +479,15 @@ grep -rn "PLACEHOLDER" src/    # tous les Lorem identifiés
 
 ---
 
+# 🟢 Phase 2 — post-launch, plus tard
+
+> Tout ce qui suit est **explicitement reporté après le ship**. Le site
+> tourne, Thomas l'a validé, on est en ligne. C'est seulement ensuite
+> qu'on attaque ces chantiers. **Ne pas se laisser distraire** : la phase
+> 1 d'abord, en entier.
+
+---
+
 ## 🛠️ Features V3 — ce qui n'a pas été codé en V2
 
 ### 🟡 Pages individuelles d'épisode
@@ -439,22 +567,10 @@ grep -rn "PLACEHOLDER" src/    # tous les Lorem identifiés
 
 ---
 
-## 🌐 SEO & partage social
+## 🌐 SEO polish (phase 2)
 
-### 🔴 Indispensable
-
-- [ ] **`app/sitemap.ts`** — sitemap.xml généré auto par Next 14
-- [ ] **`app/robots.ts`** — robots.txt
-- [ ] **Favicon + apple-touch-icon** (depuis le logo officiel)
-  - Files attendus : `app/favicon.ico`, `app/icon.png`, `app/apple-icon.png`
-- [ ] **`<title>` + `<meta description>`** dédié par page
-  - Partiellement fait (les pages ont des `export const metadata`)
-  - Vérifier que CHAQUE page a un title spécifique
-- [ ] **OG image globale** (image statique 1200×630 pour le partage social)
-  - Fichier : `public/og.png`
-  - Référencé dans `app/layout.tsx` → `metadata.openGraph.images`
-
-### 🟡 Polish
+> Le SEO **basique** (sitemap, robots, favicon, OG statique) est déjà
+> couvert en phase 1. Cette section concerne le **polish post-launch**.
 
 - [ ] **OG images dynamiques** par page via `next/og`
   - Une OG image générée pour chaque épisode (titre + invité·e + cover)
@@ -472,7 +588,7 @@ grep -rn "PLACEHOLDER" src/    # tous les Lorem identifiés
 
 ---
 
-## ♿ Accessibilité
+## ♿ Accessibilité (phase 2)
 
 - [ ] **Audit clavier complet** (Tab / Shift+Tab / Enter / Espace partout)
   - Vérifier que le bandeau festival ne piège pas le focus
@@ -497,7 +613,10 @@ grep -rn "PLACEHOLDER" src/    # tous les Lorem identifiés
 
 ---
 
-## ⚡ Performance
+## ⚡ Performance (phase 2)
+
+> L'**optimisation images** est en phase 1 (cf. section dédiée plus haut).
+> Ici on parle d'audit Lighthouse complet, bundle analysis, etc.
 
 - [ ] **Lighthouse audit complet** (mobile + desktop)
   - Cibler : Perf > 90, A11Y > 95, SEO > 95, BP > 95
@@ -521,7 +640,11 @@ grep -rn "PLACEHOLDER" src/    # tous les Lorem identifiés
 
 ---
 
-## 🔍 Monitoring & analytics
+## 🔍 Monitoring & analytics (phase 2)
+
+> **Trop big pour le launch** (décision validée). Sentry, Lighthouse,
+> analytics, uptime : on s'en occupe une fois le site stable, avec du recul
+> sur ce dont on a vraiment besoin.
 
 - [ ] **Analytics** — choisir un outil sans cookie tracker (RGPD-friendly)
   - **Plausible** (payant, simple) ou
@@ -539,17 +662,23 @@ grep -rn "PLACEHOLDER" src/    # tous les Lorem identifiés
 
 ## 🚀 Déploiement / DevOps
 
-- [ ] **Déployer sur Vercel** (zéro config — voir HANDOVER section 17)
+> Le **déploiement** sera discuté entre Arthur et toi/Thomas — pas de
+> décision figée. Probablement Vercel mais à valider ensemble.
 
-- [ ] **Configurer le domaine final** quand décidé
+### Phase 1
+
+- [ ] **Déployer sur Vercel** (zéro config — voir HANDOVER section 17)
+  - À discuter avec Arthur sur le timing (preview en cours de prog ou
+    seulement à la fin)
+- [ ] **Configurer le domaine final** quand décidé avec Thomas
   - Vercel → Project Settings → Domains
   - Met à jour `brand.domain` dans `data/brand.ts`
   - Vérifier que `metadataBase` dans `layout.tsx` utilise bien le nouveau domaine
 
+### Phase 2
+
 - [ ] **Variables d'environnement Vercel** (quand les APIs seront branchées)
-  - `INSTAGRAM_TOKEN`
-  - `TIKTOK_TOKEN`
-  - `RSS_FEED_URL` (si différent du dur)
+  - `INSTAGRAM_TOKEN`, `TIKTOK_TOKEN` (stats live)
   - `SANITY_PROJECT_ID` / `SANITY_DATASET` / `SANITY_TOKEN` (quand CMS migré)
   - `RESEND_API_KEY` (quand formulaires)
 
@@ -561,7 +690,7 @@ grep -rn "PLACEHOLDER" src/    # tous les Lorem identifiés
 
 ---
 
-## 🧹 Tech debt / polish
+## 🧹 Tech debt / polish (phase 2)
 
 - [ ] **Retirer le `id="top"`** du `festival/hero.tsx` — plus utilisé,
   hérité de la V1.
@@ -583,28 +712,36 @@ grep -rn "PLACEHOLDER" src/    # tous les Lorem identifiés
 
 ---
 
-## 🎪 Festival — quand l'édition 2025 sera passée
+## 🎪 Festival — état de la page (décision avec Thomas)
 
-À faire **après le 13 juin 2025** :
+> ⚠️ **L'édition du 13 juin 2025 est déjà passée** (on est en mai 2026).
+> La page `/festival` continue d'afficher "édition à venir, billets actifs"
+> comme si on était en pré-juin 2025. **Cette incohérence doit être
+> tranchée AVANT le launch public**, en discussion avec Thomas.
 
-- [ ] **Basculer `/festival` en mode archive**
+Trois options à proposer à Thomas :
+
+- [ ] **Option A — Archive 2025 pure**
   - Bandeau "Édition 2025 — c'est passé, merci à toustes 🧡"
   - CTA "Voir les photos" / "Aftermovie" au lieu de "Billets"
   - Garder le contenu visible (programme, artistes, partenaires) pour mémoire
+  - Supprimer le `<FestivalBanner>` sticky du layout
 
-- [ ] **Mettre à jour le bandeau sticky** (`festival-banner.tsx`)
-  - Soit le supprimer
-  - Soit le passer en mode teaser "Édition 2026 — save the date" quand date connue
-  - Soit le faire pointer vers une page recap / aftermovie
+- [ ] **Option B — Archive 2025 + teaser 2026**
+  - Page archive comme en A
+  - Bandeau sticky modifié : "Édition 2026 — save the date" (sans date précise)
+  - Pointe vers une page recap / newsletter pour suivre l'annonce
 
-- [ ] **Photos de l'édition 2025**
-  - Créer une route `/festival/archives/2025/page.tsx`
-  - Galerie photo (lightbox)
-  - Aftermovie YouTube/Vimeo si dispo
+- [ ] **Option C — Nouvelle édition 2026 confirmée**
+  - Remplacer tout le contenu festival pour 2026 (date, lieu, prog, artistes)
+  - Garder le mode "billets actifs"
+  - Créer optionnellement une route `/festival/archives/2025` pour mémoire
 
-- [ ] **Mettre à jour `festival.date`** dans `src/data/festival.ts`
-  - Soit retirer
-  - Soit refléter l'édition suivante
+**Fichiers impactés selon l'option** :
+- `src/app/festival/page.tsx`
+- `src/components/shared/festival-banner.tsx`
+- `src/data/festival.ts`
+- `src/components/podcast/festival-feature.tsx` (la section featured sur la home podcast)
 
 ---
 

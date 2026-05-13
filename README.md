@@ -43,7 +43,7 @@ Compatible Vercel sans configuration. Push, import, c'est en ligne.
 | `/` | Home podcast (hub) — hero, épisodes phares, résidence, hôte, festival featured, social wall |
 | `/episodes` | Catalogue complet avec filtre par saison |
 | `/residence` | Résidence Gaîté Lyrique (Ebony, Tess Kirby) |
-| `/festival` | Page festival (édition à venir, billetterie) — ex-home V1 |
+| `/festival` | Page festival (ex-home V1) — **statut à trancher avec Thomas** (archive 2025 ? teaser 2026 ?) |
 | `/a-propos` | Manifeste, hôte, contact |
 | `/partenariat` | Sponsoring, co-prod, partenaire festival, kit presse |
 
@@ -117,20 +117,16 @@ src/
 | `artists` | `data/festival.ts` | Artistes sur scène |
 | `partners` | `data/festival.ts` | Partenaires (Césure, Ville de Paris…) |
 
-## TODOs (consultables aussi via `grep -rn TODO src/`)
+## TODOs
 
-| Sujet | Où |
-|---|---|
-| Récupérer les vraies miniatures épisodes via API Deezer/Apple feed | `data/podcast.ts`, `episode-cover.tsx` |
-| Remplacer les épisodes placeholder par le vrai flux RSS | `data/podcast.ts` |
-| Récupérer la vraie bio de Thomas Chinarro | `data/podcast.ts` |
-| Brancher l'oEmbed Instagram/TikTok officiel pour les vrais clips | `social-wall.tsx` |
-| Remplacer les chiffres audience par les vrais KPI | `partenariat/page.tsx` |
-| Confirmer les dates de la résidence Gaîté Lyrique | `residence.ts`, `residence/page.tsx` |
-| Confirmer le domaine final (fier-e-s.fr ?) | `brand.ts` |
-| Confirmer l'URL TikTok réelle du compte podcast | `brand.ts` |
-| Ajouter un onglet "Transcription" sur la page épisodes (UI prête, contenu plus tard) | `episodes/page.tsx` |
-| Migrer vers un CMS (Sanity recommandé) quand l'ajout d'épisode devient pénible | — |
+👉 **Tout est dans [`TODO.md`](./TODO.md)** — checklist Phase 1 (ship ASAP)
++ backlog Phase 2 (post-launch).
+
+Pour les TODOs inline dans le code :
+
+```bash
+grep -rn "TODO" src/
+```
 
 ## Accessibilité
 
@@ -153,15 +149,14 @@ src/
 | `npm start` | Sert le build production |
 | `npm run lint` | Lint le projet |
 
-## Documents à lire
+## Documents à lire (dans l'ordre)
 
-- 📘 **[HANDOVER.md](./HANDOVER.md)** — doc de prise en main complète
-  (archi, design system, conventions, pièges, assets, déploiement).
-- ✅ **[TODO.md](./TODO.md)** — liste actionnable des tâches restantes
-  (APIs live, stats live, intégration assets, features V3, SEO, A11Y).
-- 🤖 **[CLAUDE.md](./CLAUDE.md)** — contexte projet auto-chargé par Claude Code.
-- 📋 **[BRIEF_V2.md](./BRIEF_V2.md)** — questionnaire à remplir pour la
-  prochaine itération.
+1. 📘 **[HANDOVER.md](./HANDOVER.md)** — doc de prise en main complète
+   (architecture, design system, conventions, pièges, assets, déploiement).
+2. ✅ **[TODO.md](./TODO.md)** — checklist Phase 1 ordonnée pour Arthur +
+   backlog Phase 2.
+3. 🤖 **[CLAUDE.md](./CLAUDE.md)** — contexte projet auto-chargé par Claude Code
+   (à mettre à jour si tu changes les conventions).
 
 ## Crédits
 
