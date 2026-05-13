@@ -10,7 +10,7 @@ import {
   Shield,
 } from "lucide-react";
 import { festival, practical } from "@/data/festival";
-import { Star } from "./star";
+import { Star } from "@/components/shared/star";
 
 const items = [
   {

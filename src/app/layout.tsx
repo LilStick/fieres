@@ -1,8 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import { festival } from "@/data/festival";
-import { CustomCursor } from "@/components/custom-cursor";
+import { brand } from "@/data/brand";
+import { CustomCursor } from "@/components/shared/custom-cursor";
+import { Navbar } from "@/components/shared/navbar";
+import { Footer } from "@/components/shared/footer";
+import { SmoothScrollProvider } from "@/components/shared/smooth-scroll-provider";
+import { FestivalBanner } from "@/components/shared/festival-banner";
 
 const display = Playfair_Display({
   subsets: ["latin"],
@@ -20,11 +24,15 @@ const body = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: `${festival.name} — ${festival.date.label}`,
-  description: festival.manifesto,
+  metadataBase: new URL(`https://${brand.domain}`),
+  title: {
+    default: `${brand.name} — ${brand.tagline}`,
+    template: `%s — ${brand.name}`,
+  },
+  description: brand.description,
   openGraph: {
-    title: `${festival.name} — ${festival.date.label}`,
-    description: festival.manifesto,
+    title: `${brand.name} — podcast queer`,
+    description: brand.description,
     type: "website",
     locale: "fr_FR",
   },
@@ -44,8 +52,13 @@ export default function RootLayout({
   return (
     <html lang="fr" className={`${display.variable} ${body.variable}`}>
       <body className="bg-ink text-bone antialiased">
-        <CustomCursor />
-        {children}
+        <SmoothScrollProvider>
+          <CustomCursor />
+          <FestivalBanner />
+          <Navbar />
+          <main className="overflow-x-hidden">{children}</main>
+          <Footer />
+        </SmoothScrollProvider>
       </body>
     </html>
   );

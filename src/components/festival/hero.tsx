@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Ticket, MapPin, Clock } from "lucide-react";
 import { useRef } from "react";
 import { festival } from "@/data/festival";
-import { Star } from "./star";
+import { Star } from "@/components/shared/star";
 
 const FLOATING_STARS = [
   { top: "8%", left: "6%", size: 64, delay: 0.0, spin: 28 },

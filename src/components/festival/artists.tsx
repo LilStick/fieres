@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { artists } from "@/data/festival";
 import { ArtistPortrait } from "./artist-portrait";
-import { Star } from "./star";
+import { Star } from "@/components/shared/star";
 
 export function Artists() {
   return (

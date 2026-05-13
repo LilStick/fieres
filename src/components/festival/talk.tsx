@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Quote } from "lucide-react";
 import { speakers } from "@/data/festival";
-import { Star } from "./star";
+import { Star } from "@/components/shared/star";
 
 export function Talk() {
   return (

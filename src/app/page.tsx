@@ -1,23 +1,26 @@
-import { Navbar } from "@/components/navbar";
-import { Hero } from "@/components/hero";
-import { Programme } from "@/components/programme";
-import { Artists } from "@/components/artists";
-import { Talk } from "@/components/talk";
-import { PracticalInfo } from "@/components/practical-info";
-import { Partners } from "@/components/partners";
-import { Footer } from "@/components/footer";
+import type { Metadata } from "next";
+import { PodcastHero } from "@/components/podcast/hero";
+import { FeaturedEpisodes } from "@/components/podcast/featured-episodes";
+import { HostSection } from "@/components/podcast/host-section";
+import { ResidenceHighlight } from "@/components/podcast/residence-highlight";
+import { FestivalFeature } from "@/components/podcast/festival-feature";
+import { SocialWall } from "@/components/podcast/social-wall";
+import { brand } from "@/data/brand";
+
+export const metadata: Metadata = {
+  title: `${brand.name} — ${brand.tagline}`,
+  description: brand.description,
+};
 
 export default function HomePage() {
   return (
-    <main className="overflow-x-hidden">
-      <Navbar />
-      <Hero />
-      <Programme />
-      <Artists />
-      <Talk />
-      <PracticalInfo />
-      <Partners />
-      <Footer />
-    </main>
+    <>
+      <PodcastHero />
+      <FeaturedEpisodes />
+      <ResidenceHighlight />
+      <HostSection />
+      <FestivalFeature />
+      <SocialWall />
+    </>
   );
 }

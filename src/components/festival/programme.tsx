@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Mic, Music, ShoppingBag, Sparkles } from "lucide-react";
 import { programme, type ProgramSlot } from "@/data/festival";
-import { Star } from "./star";
+import { Star } from "@/components/shared/star";
 
 const iconMap = {
   "shopping-bag": ShoppingBag,

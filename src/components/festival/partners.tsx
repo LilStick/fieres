@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { partners } from "@/data/festival";
-import { Star } from "./star";
+import { Star } from "@/components/shared/star";
 
 export function Partners() {
   return (

@@ -1,5 +1,5 @@
 import type { Artist } from "@/data/festival";
-import { Star } from "./star";
+import { Star } from "@/components/shared/star";
 import { cn } from "@/lib/utils";
 
 const accentClasses: Record<
