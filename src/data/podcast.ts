@@ -38,7 +38,7 @@ export const platforms: Platform[] = [
 ];
 
 export const host = {
-  name: "Thomas Chinaro",
+  name: "Thomas Chinarro",
   pronouns: "il/lui",
   role: "Host & médiateur",
   // Bio générée — à remplacer par le vrai texte de Thomas.
